@@ -1,4 +1,4 @@
-{ modulesPath, ... }:
+{ lib, modulesPath, pkgs, ... }:
 
 {
   imports = [
@@ -12,8 +12,10 @@
   };
 
   networking = {
+    firewall.allowedTCPPorts = [ 80 443 ];
     hostName = "proxy";
 
+    # hetzner networking
     interfaces.enp1s0 = {
       ipv4.addresses = [
         { address = "138.199.231.159"; prefixLength = 32; }
@@ -33,7 +35,40 @@
 
   programs.vim.enable = true;
 
+  services.nginx = {
+    enable = true;
+    streamConfig = /* nginx */ ''
+      server {
+        listen 80;
+        listen [::]:80;
+
+        proxy_connect_timeout 5s;
+        proxy_timeout 3m;
+
+        proxy_pass 127.0.0.1:8080;
+      }
+
+      server {
+        listen 443;
+        listen [::]:443;
+
+        proxy_connect_timeout 5s;
+        proxy_timeout 3m;
+
+        proxy_pass 127.0.0.1:8443;
+      }
+    '';
+  };
+
   time.timeZone = "Europe/Berlin";
+
+  users.users.tunnel = {
+    isNormalUser = true;
+    shell = "/run/current-system/sw/bin/nologin";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCLy/iTjHILX89/CT/+O6mUVurilUPhD6T+L9Rf/CNx tunnel@xyzbook"
+    ];
+  };
 
   system.stateVersion = "25.05";
 }

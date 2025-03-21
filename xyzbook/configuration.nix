@@ -12,6 +12,13 @@
 
   console.keyMap = "us";
 
+  environment.systemPackages = with pkgs; [
+    dig
+    htop
+    ripgrep
+    tree
+  ];
+
   i18n.defaultLocale = "de_DE.UTF-8";
 
   networking = {
@@ -19,29 +26,58 @@
     networkmanager.enable = true;
   };
 
+  nix.settings.experimental-features = [ "flakes" "nix-command" ];
+
   programs = {
     firefox.enable = true;
     vim.enable = true;
   };
 
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "mail+clt25@c3d2.de";
+  };
+
   services = {
+    autossh.sessions = [ {
+      monitoringPort = 20000;
+      name = "tunnel";
+      user = "tunnel";
+      extraArguments = "-N -R 8080:127.0.0.1:80 -R 8443:127.0.0.1:443 -R 2222:127.0.0.1:22 tunnel@clt25.nuschtos.de";
+    } ];
+
     desktopManager.plasma6.enable = true;
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
     };
+
+    nginx = {
+      enable = true;
+      virtualHosts = {
+        "clt25.nuschtos.de" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".root = ./html;
+        };
+      };
+    };
+
     openssh.enable = true;
   };
 
   time.timeZone = "Europe/Berlin";
 
-  users.users."k-ot" = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-    openssh.authorizedKeys.keys = config.users.users.root.openssh.authorizedKeys.keys;
-    packages = with pkgs; [
-      tree
-    ];
+  users.users = {
+    "k-ot" = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = config.users.users.root.openssh.authorizedKeys.keys;
+    };
+    tunnel = {
+      isNormalUser = true;
+      shell = "/run/current-system/sw/bin/nologin";
+    };
   };
 
   system.stateVersion = "25.05";

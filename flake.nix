@@ -13,14 +13,14 @@
         system = "x86_64-linux";
         modules = [
           disko.nixosModules.disko
-          ./shared.nix
+          ./ssh.nix
           ./proxy/configuration.nix
         ];
       };
 
       xyzbook = nixpkgs.lib.nixosSystem {
         modules = [
-          ./shared.nix
+          ./ssh.nix
           ./xyzbook/configuration.nix
         ];
       };
