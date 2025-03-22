@@ -45,7 +45,7 @@
       monitoringPort = 20000;
       name = "tunnel";
       user = "tunnel";
-      extraArguments = "-N -R 8080:127.0.0.1:80 -R 8443:127.0.0.1:443 -R 2222:127.0.0.1:22 tunnel@clt25.nuschtos.de";
+      extraArguments = "-N -R 8080:127.0.0.1:80 -R 8443:127.0.0.1:443 -R 2222:127.0.0.1:22 -o ClientAliveInterval=5 tunnel@clt25.nuschtos.de";
     } ];
 
     desktopManager.plasma6.enable = true;

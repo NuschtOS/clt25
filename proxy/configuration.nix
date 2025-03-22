@@ -35,29 +35,35 @@
 
   programs.vim.enable = true;
 
-  services.nginx = {
-    enable = true;
-    streamConfig = /* nginx */ ''
-      server {
-        listen 80;
-        listen [::]:80;
+  services = {
+    nginx = {
+      enable = true;
+      streamConfig = /* nginx */ ''
+        server {
+          listen 80;
+          listen [::]:80;
 
-        proxy_connect_timeout 5s;
-        proxy_timeout 3m;
+          proxy_connect_timeout 5s;
+          proxy_timeout 3m;
 
-        proxy_pass 127.0.0.1:8080;
-      }
+          proxy_pass 127.0.0.1:8080;
+        }
 
-      server {
-        listen 443;
-        listen [::]:443;
+        server {
+          listen 443;
+          listen [::]:443;
 
-        proxy_connect_timeout 5s;
-        proxy_timeout 3m;
+          proxy_connect_timeout 5s;
+          proxy_timeout 3m;
 
-        proxy_pass 127.0.0.1:8443;
-      }
-    '';
+          proxy_pass 127.0.0.1:8443;
+        }
+      '';
+    };
+
+    openssh.settings = {
+      ClientAliveInterval = 5;
+    };
   };
 
   time.timeZone = "Europe/Berlin";
