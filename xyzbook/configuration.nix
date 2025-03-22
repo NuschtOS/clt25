@@ -52,6 +52,33 @@
       wayland.enable = true;
     };
 
+    hedgedoc = {
+      enable = true;
+      settings = {
+        domain = "hedgedoc.clt25.nuschtos.de";
+        protocolUseSSL = true;
+      };
+    };
+
+    mastodon = {
+      enable = true;
+      configureNginx = true;
+      localDomain = "mastodon.clt25.nuschtos.de";
+      smtp.fromAddress = "noreply@mastodon.clt25.nuschtos.de";
+      streamingProcesses = 1;
+      extraConfig.SINGLE_USER_MODE = "true";
+    };
+
+    nextcloud = {
+      enable = true;
+      config = {
+        dbhost = "/run/postgresql";
+        dbtype = "pgsql";
+      };
+      hostName = "nextcloud.clt25.nuschtos.de";
+      config.adminpassFile = "/etc/nextcloud-admin-pass";
+    };
+
     nginx = {
       enable = true;
       virtualHosts = {
@@ -60,10 +87,32 @@
           forceSSL = true;
           locations."/".root = ./html;
         };
+        "hedgedoc.clt25.nuschtos.de" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/".proxyPass = "http://[::1]:${toString config.services.hedgedoc.settings.port}";
+        };
+        "mastodon.clt25.nuschtos.de" = {
+          enableACME = true;
+          forceSSL = true;
+        };
+        "nextcloud.clt25.nuschtos.de" = {
+          enableACME = true;
+          forceSSL = true;
+        };
       };
     };
 
     openssh.enable = true;
+
+    postgresql = {
+      enable = true;
+      ensureDatabases = [ "nextcloud" ];
+      ensureUsers = [ {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      } ];
+    };
   };
 
   time.timeZone = "Europe/Berlin";

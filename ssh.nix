@@ -16,5 +16,7 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGv/oVZzyevF6wrYQLYpTtov8pMiY9A5O3/91bAGvGmZ goeranh@node5"
     # marcel
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK255EY8KUx5cMXSuoERXJSzVnkDUM+y8sMAVrRoDBnn"
+    # proxy
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOfHk8E9mkGtwSFmDNGQi545SoFb2IGDGRvkZsA3EzA7 root@proxy"
   ];
 }
