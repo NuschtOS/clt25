@@ -15,6 +15,7 @@
   environment.systemPackages = with pkgs; [
     dig
     htop
+    kdePackages.krfb
     ripgrep
     tree
   ];
@@ -30,6 +31,7 @@
 
   programs = {
     firefox.enable = true;
+    git.enable = true;
     vim.enable = true;
   };
 
@@ -113,6 +115,9 @@
         ensureDBOwnership = true;
       } ];
     };
+
+    # KRDP doesn't work on Wayland and just produces a white screen
+    xserver.enable = true;
   };
 
   time.timeZone = "Europe/Berlin";
